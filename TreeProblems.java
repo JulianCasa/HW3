@@ -27,7 +27,25 @@ public class TreeProblems {
     // *several* lines of code. Hint: create two temporary TreeSets and utilize the
     // methods retainAll(), addAll(), and removeAll(). But in the end, get something to work.
 
-    return setA;
+    /*The program creates copies of the given sets */
+    Set<Integer> tempA = new TreeSet<Integer>(setA);
+    Set<Integer> tempB = new TreeSet<Integer>(setB);
+
+    /*It then uses the remove all method of the Set nterface to leave only the unique
+     * elements of each set in the temp sets
+    */
+    tempA.removeAll(setB);
+    tempB.removeAll(setA);
+
+    /*It then creates a new TreeSet to store the unique elements of the temp sets and returns 
+     * the new TreeSet
+    */
+    Set<Integer> difSet = new TreeSet<Integer>(setA);
+    difSet.clear();
+    difSet.addAll(tempA);
+    difSet.addAll(tempB);
+
+    return difSet;
   }
 
 
@@ -41,8 +59,20 @@ public class TreeProblems {
   public static void removeEven(Map<Integer, String> treeMap) {
 
     // INSERT CODE HERE.
+    //First creates an arraylist to store the even keys
+    List<Integer> evenKeys = new ArrayList<Integer>();
 
-    return;
+    //It iterates through the keys of the treeMap and adds the even keys to the arraylist
+    for (Integer key : treeMap.keySet()) {
+      if (key % 2 == 0) {
+        evenKeys.add(key);
+      }
+    }
+
+    //Finally it uses the remove method of the Map interface to remove the even keys values from the treeMap
+    for (Integer key : evenKeys) {
+      treeMap.remove(key);
+    }
   }
 
 
@@ -57,7 +87,19 @@ public class TreeProblems {
 
     // INSERT CODE HERE
 
-    return false;
+    /*Creates a boolean variable that is initially set to false*/
+    Boolean isEqual = false;
+
+    /*It then checks if the trees are equal using the map equals method
+     * If they are equal it sets the boolean variable to true. Otherwise it 
+     * remains false
+    */
+    if (tree1.equals(tree2)) {
+      isEqual = true;
+    }
+
+    //The boolean is then returned
+    return isEqual;
 
   }
 
