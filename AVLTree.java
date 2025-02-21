@@ -1,6 +1,6 @@
 
 /*
- * *** YOUR NAME GOES HERE / YOUR SECTION NUMBER ***
+ * *** Julian Casalez/ YOUR SECTION NUMBER ***
  *
  * This java file is a Java object implementing simple AVL Tree.
  * You are to complete the deleteElement method.
@@ -360,54 +360,66 @@ class LUC_AVLTree {
          * do many of the same things as this method.
          */
 
-         if (node != null){
-            if ( value < node.value){
+
+            // Checks to see if the tree is empty.
+            if (node == null) {
+                return null;
+            }
+        
+            // Recursively traverses to find the node to delete.
+            if (value < node.value) {
                 node.leftChild = deleteElement(value, node.leftChild);
-            } else if (value > node.value){
+            } else if (value > node.value) {
                 node.rightChild = deleteElement(value, node.rightChild);
-            } else {
-                if (node.leftChild == null || node.rightChild == null){
-                    Node temp = null;
-                    if (temp == node.leftChild){
-                        temp = node.rightChild;
-                    } else {
-                        temp = node.leftChild;
-                    }
-                    if (temp == null){
+            } else { 
+                // Case 1: Node has one or no children
+                if (node.leftChild == null || node.rightChild == null) {
+                    Node temp = (node.leftChild != null) ? node.leftChild : node.rightChild;
+                    if (temp == null) {  // No children
                         temp = node;
-                        node = null;
-                    } else {
+                        node = null;  // Deleting the node
+                    } else {  // One child
                         node = temp;
                     }
                 } else {
+                    // Case 2: Node has two children
+                    // Find the inorder successor (smallest in the right subtree)
                     Node temp = minValueNode(node.rightChild);
-                    node.value = temp.value;
-                    node.rightChild = deleteElement(temp.value, node.rightChild);
+                    node.value = temp.value;  // Replace value with the successor
+                    node.rightChild = deleteElement(temp.value, node.rightChild);  // Delete the inorder successor
                 }
             }
-
-            int bFactor = getBalanceFactor(node);
-
-            if (Math.abs(bFactor) >= 1 && (bFactor <= 1 && bFactor >= -1)){
+        
+            // If the tree has only one node, return null (no root).
+            if (node == null) {
                 return node;
             }
-            else {
-                if (bFactor > 1 && getBalanceFactor(node.leftChild) >= 0){
-                    return LLRotation(node);
-                }
-                if (bFactor > 1 && getBalanceFactor(node.leftChild) < 0){
-                    return LRRotation(node);
-                }
-                if (bFactor < -1 && getBalanceFactor(node.rightChild) <= 0){
-                    return RRRotation(node);
-                }
-                if (bFactor < -1 && getBalanceFactor(node.rightChild) > 0){
-                    return RLRotation(node);
-                }
+        
+            // Update the height of the current node.
+            node.height = 1 + Math.max(getHeight(node.leftChild), getHeight(node.rightChild));
+        
+            // Get the balance factor to check if the node became unbalanced.
+            int bFactor = getBalanceFactor(node);
+        
+            // Perform rotations to restore balance.
+            if (bFactor > 1 && getBalanceFactor(node.leftChild) >= 0) {
+                return LLRotation(node);  // Left-Left case
             }
-         }
-        return node;
-    }
+            if (bFactor < -1 && getBalanceFactor(node.rightChild) <= 0) {
+                return RRRotation(node);  // Right-Right case
+            }
+            if (bFactor > 1 && getBalanceFactor(node.leftChild) < 0) {
+                return LRRotation(node);  // Left-Right case
+            }
+            if (bFactor < -1 && getBalanceFactor(node.rightChild) > 0) {
+                return RLRotation(node);  // Right-Left case
+            }
+        
+            // Return the potentially rebalanced node (which may have become the new root).
+            return node;
+        }
+        
+    
 
 
     /**
