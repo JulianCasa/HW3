@@ -7,8 +7,6 @@
  *
  */
 
-import java.lang.Math;
-
 
 /**
  *  Class: Node
@@ -362,6 +360,52 @@ class LUC_AVLTree {
          * do many of the same things as this method.
          */
 
+         if (node != null){
+            if ( value < node.value){
+                node.leftChild = deleteElement(value, node.leftChild);
+            } else if (value > node.value){
+                node.rightChild = deleteElement(value, node.rightChild);
+            } else {
+                if (node.leftChild == null || node.rightChild == null){
+                    Node temp = null;
+                    if (temp == node.leftChild){
+                        temp = node.rightChild;
+                    } else {
+                        temp = node.leftChild;
+                    }
+                    if (temp == null){
+                        temp = node;
+                        node = null;
+                    } else {
+                        node = temp;
+                    }
+                } else {
+                    Node temp = minValueNode(node.rightChild);
+                    node.value = temp.value;
+                    node.rightChild = deleteElement(temp.value, node.rightChild);
+                }
+            }
+
+            int bFactor = getBalanceFactor(node);
+
+            if (Math.abs(bFactor) >= 1 && (bFactor <= 1 && bFactor >= -1)){
+                return node;
+            }
+            else {
+                if (bFactor > 1 && getBalanceFactor(node.leftChild) >= 0){
+                    return LLRotation(node);
+                }
+                if (bFactor > 1 && getBalanceFactor(node.leftChild) < 0){
+                    return LRRotation(node);
+                }
+                if (bFactor < -1 && getBalanceFactor(node.rightChild) <= 0){
+                    return RRRotation(node);
+                }
+                if (bFactor < -1 && getBalanceFactor(node.rightChild) > 0){
+                    return RLRotation(node);
+                }
+            }
+         }
         return node;
     }
 
@@ -559,3 +603,4 @@ class LUC_AVLTree {
         return z;
     }
 }
+
